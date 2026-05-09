@@ -10,7 +10,7 @@ class UserReservasiController extends Controller
 {
     public function index()
     {
-        return view('reservasi'); 
+        return view('reservasi');
     }
 
     public function store(Request $request)
@@ -30,6 +30,17 @@ class UserReservasiController extends Controller
             'catatan'       => $request->catatan,
         ]);
 
-        return back()->with('success', 'Reservasi berhasil dikirim!');
+        return redirect()->route('user.historireservasi')
+            ->with('success', 'Reservasi berhasil dikirim!');
+    }
+
+    public function histori()
+    {
+        $reservasis = Reservasi::where('user_id', Auth::id())
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam', 'desc')
+            ->get();
+
+        return view('histori-reservasi', compact('reservasis'));
     }
 }

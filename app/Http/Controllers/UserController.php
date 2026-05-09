@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UserExport;
 use App\Models\Menu;
+use App\Models\Reservasi;
 
 class UserController extends Controller
 {
@@ -72,63 +73,21 @@ class UserController extends Controller
     }
 
 
-    public function reservasi()
-    {
-        return view('reservasi');
-    }
-
-    public function reservasiStore(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'tanggal' => 'required',
-            'jam' => 'required',
-            'jumlah_orang' => 'required|integer',
-        ]);
-
-        $data = session('reservasis', []);
-
-        $data[] = [
-            'name' => $request->name,
-            'tanggal' => $request->tanggal,
-            'jam' => $request->jam,
-            'jumlah_orang' => $request->jumlah_orang,
-            'catatan' => $request->catatan,
-            'waktu' => now()->format('d-m-Y H:i'),
-        ];
-
-        // Simpan lagi ke session
-        session(['reservasis' => $data]);
-
-        return back()->with('success', 'Reservasi berhasil dikirim!');
-    }
-
-
-
     public function adminReservasiIndex()
     {
-        $reservasis = session('reservasis', []);
+        $reservasis = Reservasi::with('user')
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam', 'desc')
+            ->get();
 
         return view('admin.reservasi.index', compact('reservasis'));
     }
 
-
-
-    public function deleteReservasi($index)
+    public function deleteReservasi($id)
     {
-        $reservasis = session('reservasis', []);
-
-        if (isset($reservasis[$index])) {
-            unset($reservasis[$index]);
-
-            // Re-index biar ga bolong
-            $reservasis = array_values($reservasis);
-            session(['reservasis' => $reservasis]);
-        }
-
+        Reservasi::findOrFail($id)->delete();
         return back()->with('success', 'Reservasi berhasil dihapus!');
     }
-
 
 
 

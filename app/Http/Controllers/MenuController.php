@@ -23,7 +23,7 @@ class MenuController extends Controller
             ->orWhere('category', 'like', "%$search%");
         })
         ->orderBy('id', 'DESC')
-        ->paginate(10);   // <-- TAMBAH INI
+        ->get();   // <-- TAMBAH INI
 
         return view('admin.menu.index', compact('menus', 'search'));
     }

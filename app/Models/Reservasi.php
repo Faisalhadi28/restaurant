@@ -6,5 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservasi extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'tanggal',
+        'jam',
+        'jumlah_orang',
+        'catatan',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\UserReservasiController;
 use App\Http\Middleware\IsAdmin;
 use App\Models\Menu;
 use App\Models\Pemesanan;
@@ -42,7 +43,6 @@ Route::prefix('/user')->name('user.')->group(function() {
     })->name('dashboard');
 
     Route::post('/pesanan/tambah/{menu_id}', [PemesananController::class, 'tambahPesanan'])->name('pesanan.tambah');
-
     Route::get('/keranjang', [OrderDetailController::class, 'keranjang'])->name('keranjang');
     Route::post('/checkout', [OrderDetailController::class, 'checkout'])->name('checkout');
     Route::delete('/pesanan/batalkan/{id}', [OrderDetailController::class, 'batalkan'])->name('pesanan.batalkan');
@@ -55,8 +55,9 @@ Route::prefix('/user')->name('user.')->group(function() {
     Route::get('/histori', [PemesananController::class, 'histori'])->name('histori');
     Route::delete('/histori/{id}', [PemesananController::class, 'hapusHistori'])->name('histori.hapus');
     Route::get('/histori/{id}/pdf', [PemesananController::class, 'downloadPDF'])->name('histori.pdf');
-    Route::get('/reservasi', [UserController::class, 'reservasi'])->name('reservasi');
-    Route::post('/reservasi/store', [UserController::class, 'reservasiStore'])->name('reservasi.store');
+    Route::post('/reservasi/store', [UserReservasiController::class, 'store'])->name('reservasi.store');
+    Route::get('/historireservasi', [UserReservasiController::class, 'histori'])->name('historireservasi');
+    Route::get('/reservasi', [UserReservasiController::class, 'index'])->name('reservasi');
 
 
 
